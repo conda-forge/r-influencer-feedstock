@@ -15,7 +15,8 @@ source:
   sha256: 4fc9324179bd8896875fc0e879a8a96b9ef2a6cf42a296c3b7b4d9098519e98a
 
 build:
-  number: 0
+  merge_build_host: True  # [win]
+  number: 1
   # igraph is not available for windows
   skip: true  # [win]
   rpaths:
@@ -24,17 +25,17 @@ build:
 
 requirements:
   build:
+    - posix                # [win]
+    - {{ compiler('c') }}        # [unix]
+    - {{ compiler('m2w64_c') }}  # [win]
+  host:
     - r-base
     - r-matrix >=1.1_4
     - r-igraph >=1.0.1
-    - posix                # [win]
-    - {{native}}toolchain  # [win]
-    - gcc                  # [not win]
   run:
     - r-base
     - r-matrix >=1.1_4
     - r-igraph >=1.0.1
-    - libgcc  # [not win]
 
 test:
   commands:
