@@ -10,36 +10,41 @@ package:
 source:
   fn: influenceR_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/influenceR_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/influenceR/influenceR_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/influenceR_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/influenceR/influenceR_{{ version }}.tar.gz
   sha256: 4fc9324179bd8896875fc0e879a8a96b9ef2a6cf42a296c3b7b4d9098519e98a
 
 build:
   merge_build_host: True  # [win]
-  number: 1
-  # igraph is not available for windows
-  skip: true  # [win]
+  number: 2
   rpaths:
     - lib/R/lib/
     - lib/
 
 requirements:
   build:
-    - posix                # [win]
-    - {{ compiler('c') }}        # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('c') }}        # [not win]
+    - {{native}}toolchain        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+
   host:
     - r-base
     - r-matrix >=1.1_4
     - r-igraph >=1.0.1
+
   run:
     - r-base
+    - {{native}}gcc-libs         # [win]
     - r-matrix >=1.1_4
     - r-igraph >=1.0.1
 
 test:
   commands:
-    - $R -e "library('influenceR')"  # [not win]
+    - $R -e "library('influenceR')"           # [not win]
     - "\"%R%\" -e \"library('influenceR')\""  # [win]
 
 about:
@@ -52,8 +57,14 @@ about:
     On Unix systems, the betweenness, Key Players, and bridging implementations are
     parallelized with OpenMP, which may run faster on systems which have OpenMP configured.
   license_family: GPL2
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'  # [unix]
+  license_file: '{{ environ["PREFIX"] }}\R\share\licenses\GPL-2'      # [win]
 
 extra:
   recipe-maintainers:
     - johanneskoester
     - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
+    - dbast
