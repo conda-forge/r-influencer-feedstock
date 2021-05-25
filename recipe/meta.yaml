@@ -1,5 +1,4 @@
 {% set version = '0.1.0' %}
-
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -8,7 +7,6 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  fn: influenceR_{{ version }}.tar.gz
   url:
     - {{ cran_mirror }}/src/contrib/influenceR_{{ version }}.tar.gz
     - {{ cran_mirror }}/src/contrib/Archive/influenceR/influenceR_{{ version }}.tar.gz
@@ -23,7 +21,7 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('c') }}              # [not win]
     - {{ compiler('m2w64_c') }}        # [win]
     - {{ posix }}filesystem        # [win]
     - {{ posix }}make
@@ -49,7 +47,7 @@ test:
 
 about:
   home: https://github.com/rcc-uchicago/influenceR
-  license: GPL-2
+  license: GPL-2.0-only
   summary: Provides functionality to compute various node centrality measures on networks. Included
     are functions to compute betweenness centrality (by utilizing Madduri and Bader's
     SNAP library), implementations of Burt's constraint and effective network size (ENS)
@@ -62,9 +60,3 @@ about:
 extra:
   recipe-maintainers:
     - conda-forge/r
-    - johanneskoester
-    - bgruening
-    - daler
-    - jdblischak
-    - cbrueffer
-    - dbast
