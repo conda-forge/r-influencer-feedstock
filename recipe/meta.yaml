@@ -1,6 +1,5 @@
 {% set version = "0.1.5" %}
 {% set posix = 'm2-' if win else '' %}
-{% set native = 'm2w64-' if win else '' %}
 
 package:
   name: r-influencer
@@ -13,8 +12,7 @@ source:
   sha256: 8164e4820f769032fab97c9ca486d33e83309641fcc4875065d8f5a43b20f58c
 
 build:
-  merge_build_host: true  # [win]
-  number: 1
+  number: 2
   rpaths:
     - lib/R/lib/
     - lib/
@@ -25,7 +23,9 @@ requirements:
     - r-matrix                   # [build_platform != target_platform]
     - r-igraph                   # [build_platform != target_platform]
     - {{ compiler('c') }}              # [not win]
+    - {{ stdlib("c") }}                # [not win]
     - {{ compiler('m2w64_c') }}        # [win]
+    - {{ stdlib("m2w64_c") }}          # [win]
     - {{ posix }}filesystem        # [win]
     - {{ posix }}make
     - {{ posix }}sed               # [win]
@@ -38,7 +38,6 @@ requirements:
     - r-igraph >=1.0.1
   run:
     - r-base
-    - {{ native }}gcc-libs         # [win]
     - r-matrix >=1.1_4
     - r-igraph >=1.0.1
     - llvm-openmp                # [osx]
